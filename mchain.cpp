@@ -4,6 +4,7 @@
 #include <string>
 
 #include "loader.h"
+#include "getter.h"
 
 #include <errno.h>
 #include <sys/types.h>
@@ -11,7 +12,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
-struct thr_cntxt
+/*struct thr_cntxt
 {
 	Loader *loader;
 };
@@ -20,6 +21,7 @@ void *loader_fun(void *arg)
 {
 	thr_cntxt *cntxt = (thr_cntxt *)arg;
 	cntxt->loader->load("http://habrahabr.ru/post/155201/");
+	printf("~~~~~~~~~~~~~~ end ~~~~~~~~~~~~~~~~~~~\n");
 	return (void *)0;
 }
 
@@ -49,7 +51,7 @@ void *reader_fun(void *arg)
 	} while (bytes);
 
 	return (void*)0;
-}
+}*/
 
 int main()
 {
@@ -62,8 +64,13 @@ int main()
 	}
 	printf("Hello!\n");
 
+/////////////////////////////////////////////////
+
+	Getter getter("mypipe", "http://habrahabr.ru/post/155201/"); 
+	getter.get();
+
 //////////////////////////////////////////////////
-	int err;
+	/*int err;
 	pthread_t tid1, tid2;
 
 	Loader loader("mypipe");
@@ -92,7 +99,7 @@ int main()
 	err = pthread_join(tid2, &thr_ret);
 	if (err) {
 		fprintf(stderr, "Could not join thread 2\n");
-	}
+	}*/
 //////////////////////////////////////////////////
 
 	/*Loader loader("mypipe");

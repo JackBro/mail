@@ -2,8 +2,8 @@ CC = g++
 CFLAGS=-Wall -ggdb -g3 -pthread 
 LDFLAGS= -lcurl
 
-OBJECTS=mchain.o loader.o
-SOURCE=mchain.cpp loader.cpp
+OBJECTS=mchain.o loader.o getter.o
+SOURCE=mchain.cpp loader.cpp getter.cpp
 
 all:  mchain
 

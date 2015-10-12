@@ -54,4 +54,6 @@ void Loader::load(const std::string &url)
 	if (res != CURLE_OK) {
 		fprintf(stderr, "perform error: %d\n", res);
 	}
+
+	printf("************* perform *******************\n");
 }
