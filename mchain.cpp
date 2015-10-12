@@ -5,6 +5,13 @@
 
 #include "loader.h"
 
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+
 int main()
 {
 	CURL *curl;
@@ -16,8 +23,22 @@ int main()
 	}
 	printf("Hello!\n");
 
-	Loader loader;
+	Loader loader("mypipe");
 	std::string res = loader.load("http://habrahabr.ru/post/155201/");
-	printf(res.c_str());
+
+	int fd;
+	char buf[255];
+	fd = open("mypipe", O_RDONLY);
+	if (fd == -1) {
+		fprintf(stderr, "Could not open pipe\n");
+		return 1;
+	}
+
+	if (read(fd, &buf, sizeof(buf)-1) == -1) {
+		fprintf(stderr, "Could not read from pipe\n");
+		return 1;
+	}
+	buf[254] = 0;
+	printf((const char *)buf);
 	return 0;
 }
