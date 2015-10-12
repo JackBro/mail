@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <curl/curl.h>
 
+#include <string>
+
+#include "loader.h"
+
 int main()
 {
 	CURL *curl;
@@ -11,5 +15,9 @@ int main()
 		curl_easy_cleanup(curl);
 	}
 	printf("Hello!\n");
+
+	Loader loader;
+	std::string res = loader.load("http://habrahabr.ru/post/155201/");
+	printf(res.c_str());
 	return 0;
 }
