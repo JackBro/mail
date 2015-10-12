@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS=-Wall -ggdb -g3 
+CFLAGS=-Wall -ggdb -g3 -pthread 
 LDFLAGS= -lcurl
 
 OBJECTS=mchain.o loader.o

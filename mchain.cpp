@@ -11,6 +11,45 @@
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
+struct thr_cntxt
+{
+	Loader *loader;
+};
+
+void *loader_fun(void *arg)
+{
+	thr_cntxt *cntxt = (thr_cntxt *)arg;
+	cntxt->loader->load("http://habrahabr.ru/post/155201/");
+	return (void *)0;
+}
+
+void *reader_fun(void *arg)
+{
+	int fd;
+	char buf[255];
+	fd = open("mypipe", O_RDONLY);
+	if (fd == -1) {
+		fprintf(stderr, "Could not open pipe\n");
+		return (void *)1;
+	}
+
+	ssize_t bytes;
+	do {
+		printf(">>>> pre read\n");
+		bytes = read(fd, &buf, sizeof(buf)-1);
+		printf(">>> get %d bytes\n", bytes);
+		if (bytes == -1) {
+			fprintf(stderr, "Could not read from pipe\n");
+			close(fd);
+			return (void *)1;
+		}
+		buf[bytes] = 0;
+		printf((const char *)buf);
+
+	} while (bytes);
+
+	return (void*)0;
+}
 
 int main()
 {
@@ -23,8 +62,41 @@ int main()
 	}
 	printf("Hello!\n");
 
+//////////////////////////////////////////////////
+	int err;
+	pthread_t tid1, tid2;
+
 	Loader loader("mypipe");
-	std::string res = loader.load("http://habrahabr.ru/post/155201/");
+
+	thr_cntxt cnxt;
+	cnxt.loader = &loader;
+	err = pthread_create(&tid1, NULL, loader_fun, &cnxt);
+	if (err) {
+		fprintf(stderr, "Could not create thread\n");
+		return 1;
+	}
+
+	err = pthread_create(&tid2, NULL, reader_fun, NULL);
+	if (err) {
+		fprintf(stderr, "Could not create thread 2\n");
+		return 1;
+	}
+
+
+	void *thr_ret;
+	err = pthread_join(tid1, &thr_ret);
+	if (err) {
+		fprintf(stderr, "Could not join thread\n");
+	}
+
+	err = pthread_join(tid2, &thr_ret);
+	if (err) {
+		fprintf(stderr, "Could not join thread 2\n");
+	}
+//////////////////////////////////////////////////
+
+	/*Loader loader("mypipe");
+	loader.load("http://habrahabr.ru/post/155201/");
 
 	int fd;
 	char buf[255];
@@ -34,11 +106,21 @@ int main()
 		return 1;
 	}
 
-	if (read(fd, &buf, sizeof(buf)-1) == -1) {
-		fprintf(stderr, "Could not read from pipe\n");
-		return 1;
-	}
-	buf[254] = 0;
-	printf((const char *)buf);
+	ssize_t bytes;
+	do {
+		printf(">>>> pre read\n");
+		bytes = read(fd, &buf, sizeof(buf)-1);
+		printf(">>> get %d bytes\n", bytes);
+		if (bytes == -1) {
+			fprintf(stderr, "Could not read from pipe\n");
+			close(fd);
+			return 1;
+		}
+		buf[bytes] = 0;
+		//printf((const char *)buf);
+
+	} while (bytes);
+
+	close(fd);*/
 	return 0;
 }

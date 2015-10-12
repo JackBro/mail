@@ -5,7 +5,7 @@ class Loader {
 public:
 	Loader(const char *pipe_name);
 	~Loader();
-	std::string load(const std::string &url);
+	void load(const std::string &url);
 
 private:
 	CURL *m_curl;
