@@ -11,9 +11,6 @@ public:
 private:
 	const char *m_pipe_name;
 	int m_fd;
-//	const char *m_url;
 	Loader m_loader;
 	Trainer m_trainer;
-
-
 };
