@@ -1,13 +1,17 @@
+#include "loader.h"
 
 class Getter
 {
 public:
-	Getter(const char *pipe_name, const char *url);
+	Getter(const char *pipe_name);
+	~Getter();
 
-	void get();
+	void get(const char *url);
 private:
 	const char *m_pipe_name;
-	const char *m_url;
+	int m_fd;
+//	const char *m_url;
+	Loader m_loader;
 
 
 };

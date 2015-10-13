@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "loader.h"
+//#include "loader.h"
 #include "getter.h"
 
 #include <errno.h>
@@ -66,8 +66,22 @@ int main()
 
 /////////////////////////////////////////////////
 
-	Getter getter("mypipe", "http://habrahabr.ru/post/155201/"); 
-	getter.get();
+	Getter getter("mypipe"); 
+	printf("^^^^^^^^^^^^^ GET ^^^^^^^^^^^^^^^^^^\n");
+	getter.get("http://london.sonoma.edu/writings/BeforeAdam/chapter3.html");
+
+	printf("^^^^^^^^^^^^^ GET ^^^^^^^^^^^^^^^^^^\n");
+	getter.get("http://london.sonoma.edu/writings/BeforeAdam/chapter1.html");
+
+	printf("^^^^^^^^^^^^^ GET ^^^^^^^^^^^^^^^^^^\n");
+	getter.get("http://london.sonoma.edu/writings/BeforeAdam/chapter2.html");
+//	getter.get("http://chehov.niv.ru/chehov/text/arhierej.htm");
+	//getter.get("http://ilibrary.ru/text/29/p.1/index.html");
+
+	//getter.get("http://www.really-learn-english.com/english-short-stories-for-complete-beginners.html");
+
+	//getter.get("http://www.klassika.ru/read.html?proza/chehov/6.txt&page=10");
+	//getter.get("http://lib.ru/LITRA/CHEHOW/d.txt");
 
 //////////////////////////////////////////////////
 	/*int err;
