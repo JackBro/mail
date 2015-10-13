@@ -1,9 +1,10 @@
 #include "loader.h"
+#include "trainer.h"
 
 class Getter
 {
 public:
-	Getter(const char *pipe_name);
+	Getter(const char *pipe_name, unsigned chain_rate);
 	~Getter();
 
 	void get(const char *url);
@@ -12,6 +13,7 @@ private:
 	int m_fd;
 //	const char *m_url;
 	Loader m_loader;
+	Trainer m_trainer;
 
 
 };

@@ -14,7 +14,7 @@ volatile int g_load_done = 0;
 pthread_mutex_t g_load_mutex = PTHREAD_MUTEX_INITIALIZER;
 //pthread_cond_t g_load_cond = PTHREAD_COND_INITIALIZER;
 
-Getter::Getter(const char *pipe_name) : m_pipe_name(pipe_name), m_fd(0), m_loader(pipe_name)
+Getter::Getter(const char *pipe_name, unsigned chain_rate) : m_pipe_name(pipe_name), m_fd(0), m_loader(pipe_name), m_trainer(chain_rate)
 {
 //	int fd;
 
@@ -46,6 +46,7 @@ struct reader_cnxt
 {
 	const char *pipe_name;
 	int fd;
+	Trainer *trainer;
 };
 
 void thr_exit()
@@ -124,6 +125,8 @@ void *reader_fun(void *arg)
 		printf("~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 		printf(buf);
 		printf("~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+		cnxt->trainer->add_chunk(buf, bytes);
 	}
 
 	printf("reader_fun: done\n");
@@ -157,6 +160,7 @@ void Getter::get(const char *url)
 	reader_cnxt rcnxt;
 	rcnxt.pipe_name = m_pipe_name;
 	rcnxt.fd = m_fd;
+	rcnxt.trainer = &m_trainer;
 
 	err = pthread_create(&tid2, NULL, reader_fun, &rcnxt);
 	if (err) {

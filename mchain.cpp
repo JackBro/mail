@@ -66,7 +66,7 @@ int main()
 
 /////////////////////////////////////////////////
 
-	Getter getter("mypipe"); 
+	Getter getter("mypipe", 3); 
 	printf("^^^^^^^^^^^^^ GET ^^^^^^^^^^^^^^^^^^\n");
 	getter.get("http://london.sonoma.edu/writings/BeforeAdam/chapter3.html");
 
