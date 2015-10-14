@@ -30,7 +30,6 @@ Loader::Loader(const char *pipe_name) : m_curl(NULL), m_pipe_name(pipe_name), m_
 
 Loader::~Loader()
 {
-	//printf("%s\n", __func__);
 	if (m_fl)
 		fclose(m_fl);
 	if (m_curl)
@@ -39,8 +38,6 @@ Loader::~Loader()
 
 size_t write_data(void *buffer, size_t size, size_t nmemb, void *stream)
 {
-	//printf("%s\n", __func__);
-	//printf("%s\n", buffer);
 	size_t written = fwrite(buffer, size, nmemb, (FILE *)stream);
 	return written;
 }

@@ -6,7 +6,6 @@ class Trainer
 {
 public:
 	Trainer(unsigned chain_rate);
-	//~Trainer();
 	
 	// analyze @buf content for adding into markov chain
 	void add_chunk(char *buf, size_t size);

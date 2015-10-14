@@ -1,5 +1,4 @@
 #include "getter.h"
-//#include "loader.h"
 
 #include <pthread.h>
 #include <sys/types.h>
@@ -15,9 +14,6 @@ pthread_mutex_t g_load_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 Getter::Getter(const char *pipe_name, unsigned chain_rate) : m_pipe_name(pipe_name), m_fd(0), m_loader(pipe_name), m_trainer(chain_rate)
 {
-
-//	printf("%s\n", __func__);
-
 	m_fd = open(m_pipe_name, O_RDONLY);
 	if (m_fd == -1) {
 		fprintf(stderr, "Could not open pipe %s error: %s\n", m_pipe_name, strerror(errno));
@@ -28,7 +24,6 @@ Getter::Getter(const char *pipe_name, unsigned chain_rate) : m_pipe_name(pipe_na
 
 Getter::~Getter()
 {
-	//printf("%s\n", __func__);
 	if (m_fd)
 		close(m_fd);
 }
@@ -49,7 +44,6 @@ struct reader_cnxt
 void thr_exit()
 {
 	pthread_mutex_lock(&g_load_mutex);
-	//printf("g_load_done = 1\n");
 	g_load_done = 1;
 	pthread_mutex_unlock(&g_load_mutex);
 
@@ -61,7 +55,6 @@ void *loader_fun(void *arg)
 	cnxt->loader->load(cnxt->url);
 	// signal that loading is over
 	thr_exit();
-	//printf("loader_fun: done\n");
 }
 
 bool is_thr_done()
@@ -69,7 +62,6 @@ bool is_thr_done()
 	bool res;
 	pthread_mutex_lock(&g_load_mutex);
 	res = g_load_done;
-	//printf("is_thr_done: %d\n", res);
 	pthread_mutex_unlock(&g_load_mutex);
 	return res;
 }
@@ -99,14 +91,10 @@ void *reader_fun(void *arg)
 			return (void *)2;		
 		}
 		buf[bytes] = 0;
-		//printf("~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 		//printf(buf);
-		//printf("~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
 		cnxt->trainer->add_chunk(buf, bytes);
 	}
-
-	//printf("reader_fun: done\n");
 }		
 
 void Getter::save(const char *filename) 
@@ -128,8 +116,6 @@ void Getter::get(const char *url)
 {
 	int err;
 	pthread_t tid1, tid2;
-
-	//printf("Getter::get\n");
 
 	pthread_mutex_lock(&g_load_mutex);
 	g_load_done = 0;
@@ -156,20 +142,16 @@ void Getter::get(const char *url)
 		return;
 	}
 
-	//printf("waiting for threads\n");
-
 	void *thr_ret;
 	err = pthread_join(tid1, &thr_ret);
 	if (err) {
 		fprintf(stderr, "Could not join thread - error: %d\n", err);
 	}
-	//printf("tid1 join\n");
 
 	err = pthread_join(tid2, &thr_ret);
 	if (err) {
 		fprintf(stderr, "Could not join thread - error: %d\n", err);
 	}
-	//printf("tid2 join\n");
 	
 	return;
 }
