@@ -186,7 +186,7 @@ bool Trainer::complete(const char *str, unsigned words_cnt, std::string &out)
 		if (count == 1)
 			shift = 0;	
 
-	//	printf("shift: %d\n", shift);
+		//printf("shift: %d\n", shift);
 
 		ret = m_mchain.equal_range(key);
 
@@ -194,23 +194,26 @@ bool Trainer::complete(const char *str, unsigned words_cnt, std::string &out)
 
 		for (it = ret.first; it != ret.second; ++it, delta++) {
 			if (delta == shift) {
-				//printf("first: %s second: %s\n", it->first.c_str(), it->second.c_str());
+			//	printf("first: %s second: %s\n", it->first.c_str(), it->second.c_str());
 				break;
 			}
 		}
 
 		unsigned space_pos = 0;
-		while(space_pos < it->first.size()) {
+		while(space_pos < it->first.size() - 1) {
 			if (*(it->first.begin()+space_pos) == ' ')
 				break;
 			space_pos++;
 		}
 
-	//	printf("space_pos: %d\n", space_pos);	
+		//printf("space_pos: %d\n", space_pos);	
 		key.clear();
-		key.append(it->first.begin() + space_pos + 1, it->first.end());
-		key.append(" ");
+		if (m_chain_rate > 1) {
+			key.append(it->first.begin() + space_pos + 1, it->first.end());
+			key.append(" ");
+		}
 		key.append(it->second);
+
 
 		if (is_first)
 			out.append(it->first);

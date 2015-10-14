@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 	}
 
 	try {
-		Getter getter("mypipe", 3 /*mchain_rate*/); 
+		Getter getter("mypipe", chain_rate /*mchain_rate*/); 
 		printf("^^^^^^^^^^^^^ GET ^^^^^^^^^^^^^^^^^^\n");
 		getter.get("http://london.sonoma.edu/writings/BeforeAdam/chapter3.html");
 
