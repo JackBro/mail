@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <string.h>
+#include <cstdlib>
 
 bool is_letter(char var)
 {
@@ -135,14 +136,14 @@ void Trainer::save(const char *mchain_file)
 
 void Trainer::get(const char *mchain_file)
 {
-	printf("%s\n", __func__);
+	//printf("%s\n", __func__);
 	std::ifstream file;
 	file.open(mchain_file);
 
 	char key[1024];
 	char value[255];
 	if (file.is_open()) {
-		printf("%s\n", mchain_file);
+		//printf("%s\n", mchain_file);
 		m_mchain.clear();
 		
 		while(file.getline(key, sizeof(key), ':')) {
@@ -159,4 +160,70 @@ void Trainer::get(const char *mchain_file)
 		fprintf(stderr, "Could not open file %s\n", mchain_file);
 	}
 
+}
+
+bool Trainer::complete(const char *str, unsigned words_cnt, std::string &out)
+{
+	std::string key(str);
+	unsigned count, shift;
+
+	std::pair <std::multimap<std::string, std::string>::iterator, std::multimap<std::string, std::string>::iterator> ret;
+	std::multimap<std::string, std::string>::iterator it; 
+
+	bool is_first = true;
+
+	while(words_cnt--) {
+
+		count = m_mchain.count(key.c_str());
+
+		if (!count)
+			return false;
+
+
+		srand(time(NULL));
+		shift = rand() % count;
+	
+		if (count == 1)
+			shift = 0;	
+
+	//	printf("shift: %d\n", shift);
+
+		ret = m_mchain.equal_range(key);
+
+		unsigned delta = 0;
+
+		for (it = ret.first; it != ret.second; ++it, delta++) {
+			if (delta == shift) {
+				//printf("first: %s second: %s\n", it->first.c_str(), it->second.c_str());
+				break;
+			}
+		}
+
+		unsigned space_pos = 0;
+		while(space_pos < it->first.size()) {
+			if (*(it->first.begin()+space_pos) == ' ')
+				break;
+			space_pos++;
+		}
+
+	//	printf("space_pos: %d\n", space_pos);	
+		key.clear();
+		key.append(it->first.begin() + space_pos + 1, it->first.end());
+		key.append(" ");
+		key.append(it->second);
+
+		if (is_first)
+			out.append(it->first);
+
+		out.append(" ");
+		out.append(it->second);
+
+		//printf("out: %s\n", out.c_str());
+
+		is_first = false;
+
+		//printf("~~~ new key: %s\n\n", key.c_str());
+	}
+
+	return true;
 }

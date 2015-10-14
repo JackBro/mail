@@ -114,12 +114,22 @@ void Getter::save(const char *filename)
 	m_trainer.save(filename);
 }
 
+void Getter::load(const char *filename)
+{
+	m_trainer.get(filename);
+}
+
+void Getter::complete(const char *str, unsigned words_cnt, std::string &out)
+{
+	m_trainer.complete(str, words_cnt, out);
+}
+
 void Getter::get(const char *url)
 {
 	int err;
 	pthread_t tid1, tid2;
 
-	printf("Getter::get\n");
+	//printf("Getter::get\n");
 
 	pthread_mutex_lock(&g_load_mutex);
 	g_load_done = 0;

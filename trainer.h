@@ -20,6 +20,9 @@ public:
 	// obtain mchain data from file
 	void get(const char *mchain_file);
 
+	// complete phrase with @words_cnt count of words
+	bool complete(const char *str, unsigned words_cnt, std::string &out);
+
 private:
 	// markov chain
 	std::multimap<std::string, std::string> m_mchain;

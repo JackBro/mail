@@ -14,6 +14,12 @@ public:
 
 	// save markov chain into file 
 	void save(const char *filename);
+
+	// load markov chain from file
+	void load(const char *filename);
+
+	// complete str with @words_cnt words count
+	void complete(const char *str, unsigned words_cnt, std::string &out);
 	
 private:
 	const char *m_pipe_name; // fifo filename
