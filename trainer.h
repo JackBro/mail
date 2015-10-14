@@ -11,8 +11,15 @@ public:
 	// analyze @buf content for adding into markov chain
 	void add_chunk(char *buf, size_t size);
 
+	// print mchain as key value pairs
+	void print_mchain();
+
 	// save markov chain into file
-	//void save(const char *mchain_file);
+	void save(const char *mchain_file);
+
+	// obtain mchain data from file
+	void get(const char *mchain_file);
+
 private:
 	// markov chain
 	std::multimap<std::string, std::string> m_mchain;

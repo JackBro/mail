@@ -1,17 +1,8 @@
 #include <stdio.h>
-//#include <curl/curl.h>
-
-//#include <string>
 
 #include "getter.h"
 #include "excp.h"
 
-//#include <errno.h>
-//#include <sys/types.h>
-//#include <sys/stat.h>
-//#include <unistd.h>
-//#include <string.h>
-//#include <fcntl.h>
 
 int main()
 {
@@ -26,6 +17,7 @@ int main()
 		printf("^^^^^^^^^^^^^ GET ^^^^^^^^^^^^^^^^^^\n");
 		getter.get("http://london.sonoma.edu/writings/BeforeAdam/chapter2.html");
 
+		getter.save("/tmp/mchain");
 	} catch (MchainException exp) {
 		fprintf(stderr, "%s\n", exp.message());
 	}

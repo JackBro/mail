@@ -109,6 +109,11 @@ void *reader_fun(void *arg)
 	//printf("reader_fun: done\n");
 }		
 
+void Getter::save(const char *filename) 
+{
+	m_trainer.save(filename);
+}
+
 void Getter::get(const char *url)
 {
 	int err;
